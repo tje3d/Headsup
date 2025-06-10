@@ -10,7 +10,23 @@
 
 Headsup transforms your gameplay by displaying crucial buffs and procs **right in the center of your screen** where you need them most. No more glancing at buff bars or missing that perfect moment to unleash your abilities!
 
-![Headsup Preview](https://via.placeholder.com/800x200/2c3e50/ecf0f1?text=Headsup+in+Action)
+## 📸 Screenshots
+
+<div align="center">
+
+### 🎯 Buff Tracking in Action
+
+![Headsup in Action](images/1.png)
+
+### ⚙️ Professional Configuration Interface
+
+![Configuration GUI](images/2.png)
+
+### 🎨 Customizable Display Options
+
+![Customization Options](images/3.png)
+
+</div>
 
 ## 🚀 Quick Start
 
@@ -26,8 +42,8 @@ Headsup transforms your gameplay by displaying crucial buffs and procs **right i
 ### 🎮 Instant Setup
 
 ```
-/headsup config  # Open the beautiful GUI
-/headsup test    # See it in action
+/headsup config  # Open the beautiful GUI (see screenshot above)
+/headsup test    # See it in action with test buffs
 ```
 
 ## 🌟 Key Features
@@ -59,10 +75,10 @@ Headsup transforms your gameplay by displaying crucial buffs and procs **right i
 
 ### ⚙️ **Professional GUI**
 
-- Easy-to-use configuration panel
-- Live spell management
-- Real-time preview
-- Import/export settings
+- Easy-to-use configuration panel with sliders and toggles
+- Live spell management with search and tooltips
+- Real-time preview of all changes
+- Comprehensive sound and display options
 
 ## 📋 Supported Spells
 
