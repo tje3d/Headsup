@@ -63,9 +63,7 @@ jobs:
           
           # If no specific version found, use a default message
           if [ -z "$CHANGELOG_SECTION" ]; then
-            CHANGELOG_SECTION="## [$VERSION] - $(date +%Y-%m-%d)
-
-See [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md) for detailed release notes."
+            CHANGELOG_SECTION="## [$VERSION] - $(date +%Y-%m-%d)\n\nSee [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md) for detailed release notes."
           fi
           
           # Save to output and file for multiline content
