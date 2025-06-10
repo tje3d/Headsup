@@ -60,6 +60,7 @@ Headsup transforms your gameplay by displaying crucial buffs and procs **right i
 - **Custom spell support** - add any spell ID
 - **Automatic duration tracking** with precise timers
 - **Buff stacking display** - shows stack counts for stackable buffs
+- **Flash effect** - visual alerts when buffs are about to expire
 
 ### 🎨 **Beautiful & Customizable**
 
@@ -68,9 +69,10 @@ Headsup transforms your gameplay by displaying crucial buffs and procs **right i
 - Customizable spacing and fonts
 - Optional spell names display
 
-### 🔊 **Audio Notifications**
+### 🔊 **Audio & Visual Alerts**
 
 - Sound alerts for new procs
+- Flash effect for expiring buffs
 - Multiple sound options
 - No spam on refreshes
 
@@ -139,18 +141,22 @@ Headsup transforms your gameplay by displaying crucial buffs and procs **right i
 
 ## 🛠️ Commands Reference
 
-| Command                       | Description            |
-| ----------------------------- | ---------------------- |
-| `/headsup` or `/hu`           | Show all commands      |
-| `/headsup config`             | Open configuration GUI |
-| `/headsup test`               | Display test buffs     |
-| `/headsup teststack`          | Test buff with stacks  |
-| `/headsup toggle`             | Enable/disable addon   |
-| `/headsup size <8-128>`       | Set icon size          |
-| `/headsup spacing <0-50>`     | Set icon spacing       |
-| `/headsup yoffset <-400-400>` | Set vertical position  |
-| `/headsup addspell <spellID>` | Add custom spell       |
-| `/headsup listspells`         | Show tracked spells    |
+| Command                       | Description              |
+| ----------------------------- | ------------------------ |
+| `/headsup` or `/hu`           | Show all commands        |
+| `/headsup config`             | Open configuration GUI   |
+| `/headsup test`               | Display test buffs       |
+| `/headsup teststack`          | Test buff with stacks    |
+| `/headsup testflash`          | Test flash effect        |
+| `/headsup toggle`             | Enable/disable addon     |
+| `/headsup size <8-128>`       | Set icon size            |
+| `/headsup spacing <0-50>`     | Set icon spacing         |
+| `/headsup yoffset <-400-400>` | Set vertical position    |
+| `/headsup flash`              | Toggle flash effect      |
+| `/headsup flashtime <1-30>`   | Set flash threshold      |
+| `/headsup flashspeed <0.1-2>` | Set flash speed          |
+| `/headsup addspell <spellID>` | Add custom spell         |
+| `/headsup listspells`         | Show tracked spells      |
 
 ## 🎯 Perfect For
 
@@ -176,6 +182,15 @@ Headsup now intelligently displays stack counts for stackable buffs like Maelstr
 /headsup addspell 12345    # Add any spell by ID
 /headsup removespell 12345 # Remove from tracking
 /headsup resetspells       # Reset to defaults
+```
+
+### Flash Effect Setup
+
+```
+/headsup flash                 # Toggle flash effect on/off
+/headsup flashtime 5           # Flash when 5 seconds left
+/headsup flashspeed 0.3        # Flash every 0.3 seconds
+/headsup testflash             # Test flash effect
 ```
 
 ### Audio Setup

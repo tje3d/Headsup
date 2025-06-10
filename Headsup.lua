@@ -126,7 +126,11 @@ local defaults = {
     customSpells = {}, -- Store custom added spells
     removedSpells = {}, -- Store removed default spells
     enableSound = false, -- Enable/disable sound on spell application
-    soundChoice = "Sound\\Spells\\ShaysBell.wav" -- Default sound to play
+    soundChoice = "Sound\\Spells\\ShaysBell.wav", -- Default sound to play
+    -- Flash effect settings
+    enableFlashEffect = true, -- Enable flash effect when buffs are about to expire
+    flashThreshold = 3, -- Start flashing when buff has X seconds left
+    flashSpeed = 0.5 -- Flash interval in seconds
 }
 
 -- Active buffs table
@@ -261,6 +265,11 @@ local function CreateSpellFrame(spellID)
     if spellIcon then
         frame.icon:SetTexture(spellIcon)
     end
+    
+    -- Initialize animation variables
+    frame.flashStartTime = nil
+    frame.lastFlashState = false
+    frame.originalAlpha = 1.0
 
     -- Timer text
     frame.timer = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
@@ -296,7 +305,7 @@ local function CreateSpellFrame(spellID)
     return frame
 end
 
--- Update timer display
+-- Update timer display and handle fade/flash effects
 local function UpdateTimer(frame, timeLeft)
     if timeLeft > 60 then
         frame.timer:SetText(string.format("%.0fm", timeLeft / 60))
@@ -304,6 +313,39 @@ local function UpdateTimer(frame, timeLeft)
         frame.timer:SetText(string.format("%.1f", timeLeft))
     else
         frame.timer:SetText("")
+    end
+    
+    -- Reset alpha to full opacity
+    frame:SetAlpha(1.0)
+    
+    -- Handle flash effect
+    if HeadsupDB.enableFlashEffect and timeLeft <= HeadsupDB.flashThreshold then
+        if not frame.flashStartTime then
+            frame.flashStartTime = GetTime()
+        end
+        
+        local currentTime = GetTime()
+        local flashCycle = math.fmod(currentTime - frame.flashStartTime, HeadsupDB.flashSpeed * 2)
+        local shouldFlash = flashCycle < HeadsupDB.flashSpeed
+        
+        if shouldFlash ~= frame.lastFlashState then
+            frame.lastFlashState = shouldFlash
+            if shouldFlash then
+                -- Flash on - make it more visible
+                frame.icon:SetVertexColor(1.5, 1.5, 1.5) -- Brighten the icon
+                frame.timer:SetTextColor(1, 0.2, 0.2) -- Red timer text
+            else
+                -- Flash off - normal appearance
+                frame.icon:SetVertexColor(1, 1, 1) -- Normal icon color
+                frame.timer:SetTextColor(1, 1, 0) -- Yellow timer text
+            end
+        end
+    else
+        -- Reset flash effect
+        frame.flashStartTime = nil
+        frame.lastFlashState = false
+        frame.icon:SetVertexColor(1, 1, 1) -- Normal icon color
+        frame.timer:SetTextColor(1, 1, 0) -- Yellow timer text
     end
 end
 
@@ -547,6 +589,25 @@ SlashCmdList["HEADSUP"] = function(msg)
         PositionFrames()
         
         print("Headsup: Test buff with 5 stacks displayed")
+
+    elseif cmd == "testflash" then
+        -- Test flash effect with a very short duration buff
+        local testSpellID = 48108 -- Hot Streak
+        local buffData = activeBuffs[testSpellID] or {}
+        
+        if not buffData.frame then
+            buffData.frame = CreateSpellFrame(testSpellID)
+        end
+        
+        -- Set expiration time to trigger flash effect
+        buffData.expireTime = GetTime() + HeadsupDB.flashThreshold
+        buffData.stackCount = 1
+        
+        buffData.frame:Show()
+        activeBuffs[testSpellID] = buffData
+        PositionFrames()
+        
+        print("Headsup: Test flash effect displayed (" .. HeadsupDB.flashThreshold .. " seconds)")
     elseif cmd == "clear" then
         for spellID in pairs(activeBuffs) do
             HideBuff(spellID)
@@ -701,11 +762,34 @@ SlashCmdList["HEADSUP"] = function(msg)
         else
             print("Headsup: No sound selected")
         end
+    elseif cmd == "flash" then
+        HeadsupDB.enableFlashEffect = not HeadsupDB.enableFlashEffect
+        print("Headsup: Flash effect " .. (HeadsupDB.enableFlashEffect and "enabled" or "disabled"))
+    elseif cmd == "flashtime" then
+        local time = tonumber(arg)
+        if time and time >= 1 and time <= 30 then
+            HeadsupDB.flashThreshold = time
+            print("Headsup: Flash threshold set to " .. time .. " seconds")
+        else
+            print("Headsup: Current flash threshold is " .. HeadsupDB.flashThreshold .. " seconds")
+            print("Usage: /headsup flashtime <number> (1-30)")
+        end
+    elseif cmd == "flashspeed" then
+        local speed = tonumber(arg)
+        if speed and speed >= 0.1 and speed <= 2.0 then
+            HeadsupDB.flashSpeed = speed
+            print("Headsup: Flash speed set to " .. speed .. " seconds")
+        else
+            print("Headsup: Current flash speed is " .. HeadsupDB.flashSpeed .. " seconds")
+            print("Usage: /headsup flashspeed <number> (0.1-2.0)")
+        end
     else
         print("Headsup commands:")
         print("/headsup config - Open configuration interface")
         print("/headsup test - Show test buff")
         print("/headsup teststack - Show test buff with stack count")
+
+        print("/headsup testflash - Test flash effect")
         print("/headsup clear - Clear all buffs")
         print("/headsup toggle - Enable/disable addon")
         print("/headsup size <number> - Set icon size (8-128)")
@@ -721,6 +805,9 @@ SlashCmdList["HEADSUP"] = function(msg)
         print("/headsup sound - Toggle sound on/off")
         print("/headsup setsound <sound> - Set sound to play")
         print("/headsup testsound - Test current sound")
+        print("/headsup flash - Toggle flash effect")
+        print("/headsup flashtime <number> - Set flash threshold (1-30 seconds)")
+        print("/headsup flashspeed <number> - Set flash speed (0.1-2.0 seconds)")
     end
 end
 

@@ -5,6 +5,24 @@ All notable changes to the Headsup addon will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2025-06-10
+
+### ✨ Added
+- **Flash Effect**: New visual indicator for buffs about to expire
+  - `enableFlashEffect` setting with GUI toggle to enable/disable flash effect
+  - `flashThreshold` setting with GUI slider (1-30 seconds) to control when flashing starts
+  - `flashSpeed` setting with GUI slider (0.1-2.0 seconds) to control flash interval
+  - `/headsup flash` command to toggle flash effect on/off
+  - `/headsup flashtime <1-30>` command to set flash threshold
+  - `/headsup flashspeed <0.1-2>` command to set flash speed
+  - `/headsup testflash` command and GUI test button to preview flash effect
+  - Smart flash logic that makes buff icons flash when time remaining is below threshold
+
+### 🔧 Enhanced
+- **Visual Feedback**: Buffs now provide clear visual warning before expiration
+- **Customizable Timing**: Full control over when and how fast buffs flash
+- **Professional GUI**: Added dedicated visual effects section in configuration interface
+
 ## [1.1.0] - 2025-06-10
 
 ### ✨ Added

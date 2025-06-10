@@ -228,6 +228,54 @@ function Headsup:LOAD_INTERFACE()
                 func = "TestSound",
                 width = "normal",
                 order = 22
+            },
+            visualEffectsHeader = {
+                type = "header",
+                name = "Visual Effects",
+                order = 23
+            },
+
+            enableFlashEffect = {
+                type = "toggle",
+                name = "Enable Flash Effect",
+                desc = "Flash buff icons when they are about to expire",
+                get = "GetEnableFlashEffect",
+                set = "SetEnableFlashEffect",
+                width = "double",
+                order = 26
+            },
+            flashThreshold = {
+                type = "range",
+                name = "Flash Threshold",
+                desc = "Start flashing when buff has this many seconds left (1-30)",
+                min = 1,
+                max = 30,
+                step = 1,
+                get = "GetFlashThreshold",
+                set = "SetFlashThreshold",
+                width = "double",
+                order = 27
+            },
+            flashSpeed = {
+                type = "range",
+                name = "Flash Speed",
+                desc = "How fast the flash effect cycles (0.1-2.0 seconds)",
+                min = 0.1,
+                max = 2.0,
+                step = 0.1,
+                get = "GetFlashSpeed",
+                set = "SetFlashSpeed",
+                width = "double",
+                order = 28
+            },
+
+            testFlashButton = {
+                type = "execute",
+                name = "Test Flash Effect",
+                desc = "Show a test buff with flash effect",
+                func = "TestFlashEffect",
+                width = "normal",
+                order = 30
             }
         }
     }
@@ -793,6 +841,41 @@ function Headsup:TestSound()
     else
         print("Headsup: No sound selected")
     end
+end
+
+-- Visual Effects getter/setter functions
+
+
+function Headsup:GetEnableFlashEffect()
+    return HeadsupDB.enableFlashEffect
+end
+
+function Headsup:SetEnableFlashEffect(info, value)
+    HeadsupDB.enableFlashEffect = value
+    print("Headsup: Flash effect " .. (value and "enabled" or "disabled"))
+end
+
+function Headsup:GetFlashThreshold()
+    return HeadsupDB.flashThreshold
+end
+
+function Headsup:SetFlashThreshold(info, value)
+    HeadsupDB.flashThreshold = value
+end
+
+function Headsup:GetFlashSpeed()
+    return HeadsupDB.flashSpeed
+end
+
+function Headsup:SetFlashSpeed(info, value)
+    HeadsupDB.flashSpeed = value
+end
+
+
+
+function Headsup:TestFlashEffect()
+    -- Use the slash command implementation which has proper access to activeBuffs
+    SlashCmdList["HEADSUP"]("testflash")
 end
 
 -- Load the interface when addon is ready
