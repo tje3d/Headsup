@@ -1,0 +1,10 @@
+## Interface: 30300
+## Title: Headsup
+## Notes: Displays important buffs in the middle of the screen for better visibility
+## Author: Moein Porkamel
+## Version: 1.0
+## SavedVariables: HeadsupDB
+## OptionalDeps: Ace3
+
+Headsup.lua
+HeadsupGUI.lua
