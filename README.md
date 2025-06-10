@@ -59,6 +59,7 @@ Headsup transforms your gameplay by displaying crucial buffs and procs **right i
 - **All classes supported** with optimal proc tracking
 - **Custom spell support** - add any spell ID
 - **Automatic duration tracking** with precise timers
+- **Buff stacking display** - shows stack counts for stackable buffs
 
 ### 🎨 **Beautiful & Customizable**
 
@@ -143,6 +144,7 @@ Headsup transforms your gameplay by displaying crucial buffs and procs **right i
 | `/headsup` or `/hu`           | Show all commands      |
 | `/headsup config`             | Open configuration GUI |
 | `/headsup test`               | Display test buffs     |
+| `/headsup teststack`          | Test buff with stacks  |
 | `/headsup toggle`             | Enable/disable addon   |
 | `/headsup size <8-128>`       | Set icon size          |
 | `/headsup spacing <0-50>`     | Set icon spacing       |
@@ -158,6 +160,15 @@ Headsup transforms your gameplay by displaying crucial buffs and procs **right i
 - **Alt Characters** learning new rotations
 
 ## 🔧 Advanced Configuration
+
+### Buff Stacking Display
+
+Headsup now intelligently displays stack counts for stackable buffs like Maelstrom Weapon, Serendipity, and other multi-stack abilities:
+
+- **Automatic detection** - Stack counts appear automatically when buffs have multiple stacks
+- **Clean display** - Only shows when stacks > 1 to avoid clutter
+- **Perfect positioning** - Stack count appears in bottom-right corner of buff icon
+- **Testing support** - Use `/headsup teststack` to preview the feature
 
 ### Custom Spell Tracking
 

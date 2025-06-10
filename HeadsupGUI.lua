@@ -606,8 +606,31 @@ function Headsup:TestDisplay()
     if ShowBuff then
         ShowBuff(12536, 15) -- Arcane Concentration
         ShowBuff(48108, 20) -- Hot Streak
-        ShowBuff(53817, 30) -- Maelstrom Weapon
-        print("Headsup: Test buffs displayed")
+        
+        -- Test stack count display with Maelstrom Weapon (which can stack)
+        local testSpellID = 53817 -- Maelstrom Weapon
+        local buffData = activeBuffs[testSpellID] or {}
+        
+        if not buffData.frame then
+            buffData.frame = CreateSpellFrame(testSpellID)
+        end
+        
+        -- Mock stack count for testing (Maelstrom Weapon can stack to 5)
+        buffData.stackCount = 3
+        buffData.expireTime = GetTime() + 30
+        
+        -- Update stack count display
+        buffData.frame.stackCount:SetText(buffData.stackCount)
+        buffData.frame.stackCount:Show()
+        
+        buffData.frame:Show()
+        activeBuffs[testSpellID] = buffData
+        
+        if PositionFrames then
+            PositionFrames()
+        end
+        
+        print("Headsup: Test buffs displayed (including stacked buff)")
     else
         print("Headsup: ShowBuff function not available")
     end

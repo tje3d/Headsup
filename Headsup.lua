@@ -217,6 +217,9 @@ function UpdateFontSizes()
             if buffData.frame.spellName then
                 buffData.frame.spellName:SetFont("Fonts\\FRIZQT__.TTF", HeadsupDB.spellNameFontSize, "OUTLINE")
             end
+            if buffData.frame.stackCount then
+                buffData.frame.stackCount:SetFont("Fonts\\FRIZQT__.TTF", HeadsupDB.timerFontSize, "OUTLINE")
+            end
         end
     end
 end
@@ -265,6 +268,13 @@ local function CreateSpellFrame(spellID)
     frame.timer:SetTextColor(1, 1, 0) -- Yellow
     frame.timer:SetFont("Fonts\\FRIZQT__.TTF", HeadsupDB.timerFontSize, "OUTLINE")
 
+    -- Stack count text (bottom-right corner)
+    frame.stackCount = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+    frame.stackCount:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", 2, -2)
+    frame.stackCount:SetTextColor(1, 1, 1) -- White
+    frame.stackCount:SetFont("Fonts\\FRIZQT__.TTF", HeadsupDB.timerFontSize, "OUTLINE")
+    frame.stackCount:Hide() -- Hidden by default, shown only when stacks > 1
+
     -- Spell name text (configurable)
     frame.spellName = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
     frame.spellName:SetPoint("TOP", frame, "BOTTOM", 0, -1)
@@ -301,7 +311,7 @@ end
 local function ScanExistingBuffs()
     local index = 1
     while true do
-        local name, _, _, _, _, _, expirationTime, _, _, _, spellID = UnitAura("player", index, "HELPFUL")
+        local name, _, _, count, _, _, expirationTime, _, _, _, spellID = UnitAura("player", index, "HELPFUL")
 
         if not name then
             break -- No more buffs
@@ -315,8 +325,18 @@ local function ScanExistingBuffs()
                 buffData.frame = CreateSpellFrame(spellID)
             end
 
-            -- Set the real expiration time
+            -- Set the real expiration time and stack count
             buffData.expireTime = expirationTime or (GetTime() + 30)
+            buffData.stackCount = count or 1
+            
+            -- Update stack count display
+            if buffData.stackCount > 1 then
+                buffData.frame.stackCount:SetText(buffData.stackCount)
+                buffData.frame.stackCount:Show()
+            else
+                buffData.frame.stackCount:Hide()
+            end
+            
             buffData.frame:Show()
             activeBuffs[spellID] = buffData
         end
@@ -368,23 +388,37 @@ function ShowBuff(spellID, duration)
         buffData.frame = CreateSpellFrame(spellID)
     end
 
-    -- Always get fresh buff duration from UnitAura (handles refreshes)
+    -- Always get fresh buff duration and stack count from UnitAura (handles refreshes)
     local spellName = GetSpellInfo(spellID)
     local newExpirationTime = nil
+    local stackCount = 1
 
     if spellName then
-        local _, _, _, _, _, _, expirationTime = UnitAura("player", spellName)
+        local _, _, _, count, _, _, expirationTime = UnitAura("player", spellName)
         if expirationTime then
             newExpirationTime = expirationTime
         end
+        if count then
+            stackCount = count
+        end
     end
 
-    -- Update expiration time (always, even for existing buffs)
+    -- Update expiration time and stack count (always, even for existing buffs)
     if newExpirationTime then
         buffData.expireTime = newExpirationTime
     else
         -- Fallback if we can't get the real time
         buffData.expireTime = GetTime() + (duration or 30)
+    end
+    
+    buffData.stackCount = stackCount
+    
+    -- Update stack count display
+    if buffData.stackCount > 1 then
+        buffData.frame.stackCount:SetText(buffData.stackCount)
+        buffData.frame.stackCount:Show()
+    else
+        buffData.frame.stackCount:Hide()
     end
 
     -- Show the frame and update position
@@ -491,6 +525,28 @@ SlashCmdList["HEADSUP"] = function(msg)
         ShowBuff(12536, 15)
         ShowBuff(48108, 20)
         print("Headsup: Test buff displayed")
+    elseif cmd == "teststack" then
+        -- Test stack count display with mock data
+        local testSpellID = 12536 -- Arcane Concentration
+        local buffData = activeBuffs[testSpellID] or {}
+        
+        if not buffData.frame then
+            buffData.frame = CreateSpellFrame(testSpellID)
+        end
+        
+        -- Mock stack count for testing
+        buffData.stackCount = 5
+        buffData.expireTime = GetTime() + 30
+        
+        -- Update stack count display
+        buffData.frame.stackCount:SetText(buffData.stackCount)
+        buffData.frame.stackCount:Show()
+        
+        buffData.frame:Show()
+        activeBuffs[testSpellID] = buffData
+        PositionFrames()
+        
+        print("Headsup: Test buff with 5 stacks displayed")
     elseif cmd == "clear" then
         for spellID in pairs(activeBuffs) do
             HideBuff(spellID)
@@ -649,6 +705,7 @@ SlashCmdList["HEADSUP"] = function(msg)
         print("Headsup commands:")
         print("/headsup config - Open configuration interface")
         print("/headsup test - Show test buff")
+        print("/headsup teststack - Show test buff with stack count")
         print("/headsup clear - Clear all buffs")
         print("/headsup toggle - Enable/disable addon")
         print("/headsup size <number> - Set icon size (8-128)")
