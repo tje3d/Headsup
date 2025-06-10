@@ -5,81 +5,63 @@ on:
     tags:
       - 'v*.*.*' # Triggers on version tags like v1.0.0, v1.2.3, etc.
 
+permissions:
+  contents: write
+
 jobs:
   release:
     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+        steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Get tag name
+      id: tag
+      run: echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+      
+    - name: Create addon directory structure
+      run: |
+        mkdir -p Headsup
+        
+    - name: Copy addon files
+      run: |
+        cp Headsup.lua Headsup/
+        cp Headsup.toc Headsup/
+        cp HeadsupGUI.lua Headsup/
+        
+    - name: Create release archives
+      run: |
+        zip -r Headsup-${{ steps.tag.outputs.tag }}.zip Headsup/
+        cp Headsup-${{ steps.tag.outputs.tag }}.zip Headsup.zip
+        
+    - name: Create Release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        TAG: ${{ steps.tag.outputs.tag }}
+      run: |
+        gh release create "$TAG" \
+          --title "Headsup $TAG" \
+          --notes "## 🎯 Headsup $TAG
 
-      - name: Get tag name
-        id: tag
-        run: echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+        ### 📥 Installation
+        1. Download \`Headsup-$TAG.zip\` below
+        2. Extract to your \`World of Warcraft/Interface/AddOns/\` folder
+        3. Restart WoW or type \`/reload\`
+        4. Type \`/headsup config\` to configure!
 
-      - name: Create addon directory structure
-        run: |
-          mkdir -p Headsup
+        ### 🌟 What's Included
+        - \`Headsup.lua\` - Core addon functionality
+        - \`Headsup.toc\` - Addon metadata
+        - \`HeadsupGUI.lua\` - Configuration interface
 
-      - name: Copy addon files
-        run: |
-          cp Headsup.lua Headsup/
-          cp Headsup.toc Headsup/
-          cp HeadsupGUI.lua Headsup/
+        ### 🚀 Quick Commands
+        - \`/headsup config\` - Open configuration panel
+        - \`/headsup test\` - Test the addon
+        - \`/headsup\` - View all commands
 
-      - name: Create release archive
-        run: |
-          zip -r Headsup-${{ steps.tag.outputs.tag }}.zip Headsup/
+        ---
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ steps.tag.outputs.tag }}
-          release_name: Headsup ${{ steps.tag.outputs.tag }}
-          body: |
-            ## 🎯 Headsup ${{ steps.tag.outputs.tag }}
-
-            ### 📥 Installation
-            1. Download `Headsup-${{ steps.tag.outputs.tag }}.zip` below
-            2. Extract to your `World of Warcraft/Interface/AddOns/` folder
-            3. Restart WoW or type `/reload`
-            4. Type `/headsup config` to configure!
-
-            ### 🌟 What's Included
-            - `Headsup.lua` - Core addon functionality
-            - `Headsup.toc` - Addon metadata
-            - `HeadsupGUI.lua` - Configuration interface
-
-            ### 🚀 Quick Commands
-            - `/headsup config` - Open configuration panel
-            - `/headsup test` - Test the addon
-            - `/headsup` - View all commands
-
-            ---
-
-            **Compatible with World of Warcraft: Wrath of the Lich King 3.3.5a**
-          draft: false
-          prerelease: false
-
-      - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./Headsup-${{ steps.tag.outputs.tag }}.zip
-          asset_name: Headsup-${{ steps.tag.outputs.tag }}.zip
-          asset_content_type: application/zip
-
-      - name: Upload Generic Release Asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./Headsup-${{ steps.tag.outputs.tag }}.zip
-          asset_name: Headsup.zip
-          asset_content_type: application/zip
+        **Compatible with World of Warcraft: Wrath of the Lich King 3.3.5a**" \
+          Headsup-$TAG.zip \
+          Headsup.zip
