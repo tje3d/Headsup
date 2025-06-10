@@ -20,14 +20,21 @@ function Headsup:LOAD_INTERFACE()
                 name = "Headsup - Displays important buffs in the middle of the screen\nCompatible with WotLK 3.3.5a",
                 fontSize = "small",
                 width = "full",
-                order = 0
+                order = 1
             },
-            spacer = {
+            spacer1 = {
                 type = "description",
                 name = " ",
                 fontSize = "medium",
                 width = "full",
-                order = 1
+                order = 2
+            },
+            
+            -- GENERAL SETTINGS
+            generalHeader = {
+                type = "header",
+                name = "General Settings",
+                order = 3
             },
             enable = {
                 type = "toggle",
@@ -35,8 +42,43 @@ function Headsup:LOAD_INTERFACE()
                 desc = "Enable or disable the Headsup addon",
                 get = "IsHeadsupEnabled",
                 set = "ToggleEnable",
-                width = "double",
-                order = 2
+                width = "full",
+                order = 4
+            },
+            testButton = {
+                type = "execute",
+                name = "Test Display",
+                desc = "Show test buffs to preview your current settings",
+                func = "TestDisplay",
+                width = "normal",
+                order = 5
+            },
+            clearButton = {
+                type = "execute",
+                name = "Clear All",
+                desc = "Clear all currently displayed buffs",
+                func = "ClearAllBuffs",
+                width = "normal",
+                order = 6
+            },
+            
+            -- DISPLAY SETTINGS
+            displayHeader = {
+                type = "header",
+                name = "Display Settings",
+                order = 10
+            },
+            yOffset = {
+                type = "range",
+                name = "Vertical Position",
+                desc = "Set the vertical position offset from screen center (-400 to 400 pixels)",
+                min = -400,
+                max = 400,
+                step = 5,
+                get = "GetYOffset",
+                set = "SetYOffset",
+                width = "full",
+                order = 11
             },
             iconSize = {
                 type = "range",
@@ -48,7 +90,7 @@ function Headsup:LOAD_INTERFACE()
                 get = "GetIconSize",
                 set = "SetIconSize",
                 width = "double",
-                order = 3
+                order = 12
             },
             spacing = {
                 type = "range",
@@ -60,19 +102,14 @@ function Headsup:LOAD_INTERFACE()
                 get = "GetSpacing",
                 set = "SetSpacing",
                 width = "double",
-                order = 4
+                order = 13
             },
-            yOffset = {
-                type = "range",
-                name = "Vertical Position",
-                desc = "Set the vertical position offset from screen center (-400 to 400 pixels)",
-                min = -400,
-                max = 400,
-                step = 5,
-                get = "GetYOffset",
-                set = "SetYOffset",
-                width = "double",
-                order = 5
+            
+            -- TEXT SETTINGS
+            textHeader = {
+                type = "header",
+                name = "Text Settings",
+                order = 20
             },
             showSpellName = {
                 type = "toggle",
@@ -80,8 +117,8 @@ function Headsup:LOAD_INTERFACE()
                 desc = "Show spell names below the buff icons",
                 get = "GetShowSpellName",
                 set = "SetShowSpellName",
-                width = "double",
-                order = 6
+                width = "full",
+                order = 21
             },
             timerFontSize = {
                 type = "range",
@@ -93,7 +130,7 @@ function Headsup:LOAD_INTERFACE()
                 get = "GetTimerFontSize",
                 set = "SetTimerFontSize",
                 width = "double",
-                order = 7
+                order = 22
             },
             spellNameFontSize = {
                 type = "range",
@@ -105,90 +142,62 @@ function Headsup:LOAD_INTERFACE()
                 get = "GetSpellNameFontSize",
                 set = "SetSpellNameFontSize",
                 width = "double",
-                order = 8
+                order = 23
             },
-            testButton = {
-                type = "execute",
-                name = "Test Display",
-                desc = "Show test buffs to preview settings",
-                func = "TestDisplay",
-                width = "normal",
-                order = 9
-            },
-            clearButton = {
-                type = "execute",
-                name = "Clear All",
-                desc = "Clear all currently displayed buffs",
-                func = "ClearAllBuffs",
-                width = "normal",
-                order = 10
-            },
-            spellManagementHeader = {
+            
+            -- VISUAL EFFECTS
+            visualEffectsHeader = {
                 type = "header",
-                name = "Spell Management",
-                order = 11
+                name = "Visual Effects",
+                order = 30
             },
-            addSpellInput = {
-                type = "input",
-                name = "Add Spell ID",
-                desc = "Enter a spell ID to track (you can find spell IDs on Wowhead)",
-                get = "GetAddSpellInput",
-                set = "SetAddSpellInput",
-                width = "normal",
-                order = 12
-            },
-            addSpellButton = {
-                type = "execute",
-                name = "Add Spell",
-                desc = "Add the entered spell ID to tracking",
-                func = "AddSpellFromInput",
-                width = "normal",
-                order = 13
-            },
-            showSpellListButton = {
-                type = "execute",
-                name = "Manage Tracked Spells",
-                desc = "Open an interactive window to view and remove tracked spells",
-                func = "ShowSpellListFrame",
+            enableFlashEffect = {
+                type = "toggle",
+                name = "Enable Flash Effect",
+                desc = "Flash buff icons when they are about to expire",
+                get = "GetEnableFlashEffect",
+                set = "SetEnableFlashEffect",
                 width = "full",
-                order = 14
+                order = 31
             },
-            spacer2 = {
-                type = "description",
-                name = " ",
-                fontSize = "medium",
-                width = "full",
-                order = 15.5
-            },
-            removeSpellInput = {
-                type = "input",
-                name = "Remove Spell ID",
-                desc = "Enter a spell ID to remove from tracking",
-                get = "GetRemoveSpellInput",
-                set = "SetRemoveSpellInput",
-                width = "normal",
-                order = 16
-            },
-            removeSpellButton = {
-                type = "execute",
-                name = "Remove Spell",
-                desc = "Remove the entered spell ID from tracking",
-                func = "RemoveSpellFromInput",
-                width = "normal",
-                order = 17
-            },
-            resetSpellsButton = {
-                type = "execute",
-                name = "Reset to Defaults",
-                desc = "Reset all spell tracking to default settings (removes custom spells and restores removed defaults)",
-                func = "ResetSpellsToDefault",
+            flashThreshold = {
+                type = "range",
+                name = "Flash Threshold",
+                desc = "Start flashing when buff has this many seconds left (1-30)",
+                min = 1,
+                max = 30,
+                step = 1,
+                get = "GetFlashThreshold",
+                set = "SetFlashThreshold",
                 width = "double",
-                order = 18
+                order = 32
             },
+            flashSpeed = {
+                type = "range",
+                name = "Flash Speed",
+                desc = "How fast the flash effect cycles (0.1-2.0 seconds)",
+                min = 0.1,
+                max = 2.0,
+                step = 0.1,
+                get = "GetFlashSpeed",
+                set = "SetFlashSpeed",
+                width = "double",
+                order = 33
+            },
+            testFlashButton = {
+                type = "execute",
+                name = "Test Flash Effect",
+                desc = "Show a test buff with flash effect",
+                func = "TestFlashEffect",
+                width = "normal",
+                order = 34
+            },
+            
+            -- SOUND SETTINGS
             soundHeader = {
                 type = "header",
                 name = "Sound Settings",
-                order = 19
+                order = 40
             },
             enableSound = {
                 type = "toggle",
@@ -196,8 +205,8 @@ function Headsup:LOAD_INTERFACE()
                 desc = "Play a sound when a tracked spell is applied (not when refreshed)",
                 get = "GetEnableSound",
                 set = "SetEnableSound",
-                width = "double",
-                order = 20
+                width = "full",
+                order = 41
             },
             soundChoice = {
                 type = "select",
@@ -218,8 +227,8 @@ function Headsup:LOAD_INTERFACE()
                 },
                 get = "GetSoundChoice",
                 set = "SetSoundChoice",
-                width = "double",
-                order = 21
+                width = "full",
+                order = 42
             },
             testSoundButton = {
                 type = "execute",
@@ -227,55 +236,71 @@ function Headsup:LOAD_INTERFACE()
                 desc = "Play the selected sound to test it",
                 func = "TestSound",
                 width = "normal",
-                order = 22
+                order = 43
             },
-            visualEffectsHeader = {
+            
+            -- SPELL MANAGEMENT
+            spellManagementHeader = {
                 type = "header",
-                name = "Visual Effects",
-                order = 23
+                name = "Spell Management",
+                order = 50
             },
-
-            enableFlashEffect = {
-                type = "toggle",
-                name = "Enable Flash Effect",
-                desc = "Flash buff icons when they are about to expire",
-                get = "GetEnableFlashEffect",
-                set = "SetEnableFlashEffect",
-                width = "double",
-                order = 26
-            },
-            flashThreshold = {
-                type = "range",
-                name = "Flash Threshold",
-                desc = "Start flashing when buff has this many seconds left (1-30)",
-                min = 1,
-                max = 30,
-                step = 1,
-                get = "GetFlashThreshold",
-                set = "SetFlashThreshold",
-                width = "double",
-                order = 27
-            },
-            flashSpeed = {
-                type = "range",
-                name = "Flash Speed",
-                desc = "How fast the flash effect cycles (0.1-2.0 seconds)",
-                min = 0.1,
-                max = 2.0,
-                step = 0.1,
-                get = "GetFlashSpeed",
-                set = "SetFlashSpeed",
-                width = "double",
-                order = 28
-            },
-
-            testFlashButton = {
+            showSpellListButton = {
                 type = "execute",
-                name = "Test Flash Effect",
-                desc = "Show a test buff with flash effect",
-                func = "TestFlashEffect",
+                name = "Manage Tracked Spells",
+                desc = "Open an interactive window to view and remove tracked spells",
+                func = "ShowSpellListFrame",
+                width = "full",
+                order = 51
+            },
+            spacer2 = {
+                type = "description",
+                name = " ",
+                fontSize = "small",
+                width = "full",
+                order = 52
+            },
+            addSpellInput = {
+                type = "input",
+                name = "Add Spell ID",
+                desc = "Enter a spell ID to track (you can find spell IDs on Wowhead)",
+                get = "GetAddSpellInput",
+                set = "SetAddSpellInput",
                 width = "normal",
-                order = 30
+                order = 53
+            },
+            addSpellButton = {
+                type = "execute",
+                name = "Add Spell",
+                desc = "Add the entered spell ID to tracking",
+                func = "AddSpellFromInput",
+                width = "normal",
+                order = 54
+            },
+            removeSpellInput = {
+                type = "input",
+                name = "Remove Spell ID",
+                desc = "Enter a spell ID to remove from tracking",
+                get = "GetRemoveSpellInput",
+                set = "SetRemoveSpellInput",
+                width = "normal",
+                order = 55
+            },
+            removeSpellButton = {
+                type = "execute",
+                name = "Remove Spell",
+                desc = "Remove the entered spell ID from tracking",
+                func = "RemoveSpellFromInput",
+                width = "normal",
+                order = 56
+            },
+            resetSpellsButton = {
+                type = "execute",
+                name = "Reset to Defaults",
+                desc = "Reset all spell tracking to default settings (removes custom spells and restores removed defaults)",
+                func = "ResetSpellsToDefault",
+                width = "full",
+                order = 57
             }
         }
     }
