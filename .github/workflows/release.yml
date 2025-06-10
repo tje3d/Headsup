@@ -12,56 +12,56 @@ jobs:
   release:
     runs-on: ubuntu-latest
 
-        steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Get tag name
-      id: tag
-      run: echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
-      
-    - name: Create addon directory structure
-      run: |
-        mkdir -p Headsup
-        
-    - name: Copy addon files
-      run: |
-        cp Headsup.lua Headsup/
-        cp Headsup.toc Headsup/
-        cp HeadsupGUI.lua Headsup/
-        
-    - name: Create release archives
-      run: |
-        zip -r Headsup-${{ steps.tag.outputs.tag }}.zip Headsup/
-        cp Headsup-${{ steps.tag.outputs.tag }}.zip Headsup.zip
-        
-    - name: Create Release
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        TAG: ${{ steps.tag.outputs.tag }}
-      run: |
-        gh release create "$TAG" \
-          --title "Headsup $TAG" \
-          --notes "## 🎯 Headsup $TAG
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-        ### 📥 Installation
-        1. Download \`Headsup-$TAG.zip\` below
-        2. Extract to your \`World of Warcraft/Interface/AddOns/\` folder
-        3. Restart WoW or type \`/reload\`
-        4. Type \`/headsup config\` to configure!
+      - name: Get tag name
+        id: tag
+        run: echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
 
-        ### 🌟 What's Included
-        - \`Headsup.lua\` - Core addon functionality
-        - \`Headsup.toc\` - Addon metadata
-        - \`HeadsupGUI.lua\` - Configuration interface
+      - name: Create addon directory structure
+        run: |
+          mkdir -p Headsup
 
-        ### 🚀 Quick Commands
-        - \`/headsup config\` - Open configuration panel
-        - \`/headsup test\` - Test the addon
-        - \`/headsup\` - View all commands
+      - name: Copy addon files
+        run: |
+          cp Headsup.lua Headsup/
+          cp Headsup.toc Headsup/
+          cp HeadsupGUI.lua Headsup/
 
-        ---
+      - name: Create release archives
+        run: |
+          zip -r Headsup-${{ steps.tag.outputs.tag }}.zip Headsup/
+          cp Headsup-${{ steps.tag.outputs.tag }}.zip Headsup.zip
 
-        **Compatible with World of Warcraft: Wrath of the Lich King 3.3.5a**" \
-          Headsup-$TAG.zip \
-          Headsup.zip
+      - name: Create Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ steps.tag.outputs.tag }}
+        run: |
+          gh release create "$TAG" \
+            --title "Headsup $TAG" \
+            --notes "## 🎯 Headsup $TAG
+
+            ### 📥 Installation
+            1. Download \`Headsup-$TAG.zip\` below
+            2. Extract to your \`World of Warcraft/Interface/AddOns/\` folder
+            3. Restart WoW or type \`/reload\`
+            4. Type \`/headsup config\` to configure!
+
+            ### 🌟 What's Included
+            - \`Headsup.lua\` - Core addon functionality
+            - \`Headsup.toc\` - Addon metadata
+            - \`HeadsupGUI.lua\` - Configuration interface
+
+            ### 🚀 Quick Commands
+            - \`/headsup config\` - Open configuration panel
+            - \`/headsup test\` - Test the addon
+            - \`/headsup\` - View all commands
+
+            ---
+
+            **Compatible with World of Warcraft: Wrath of the Lich King 3.3.5a**" \
+              Headsup-$TAG.zip \
+              Headsup.zip
