@@ -14,7 +14,7 @@ Headsup transforms your gameplay by displaying crucial buffs and procs **right i
 
 <div align="center">
 
-### 🎯 Buff Tracking in Action
+### 🎨 Customizable Display Options
 
 ![Headsup in Action](images/1.png)
 
@@ -22,7 +22,7 @@ Headsup transforms your gameplay by displaying crucial buffs and procs **right i
 
 ![Configuration GUI](images/2.png)
 
-### 🎨 Customizable Display Options
+### 🎯 Buff Tracking in Action
 
 ![Customization Options](images/3.png)
 
