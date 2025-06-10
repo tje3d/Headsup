@@ -35,33 +35,78 @@ jobs:
           zip -r Headsup-${{ steps.tag.outputs.tag }}.zip Headsup/
           cp Headsup-${{ steps.tag.outputs.tag }}.zip Headsup.zip
 
+      - name: Extract changelog for version
+        id: changelog
+        run: |
+          # Extract version number from tag (remove 'v' prefix)
+          VERSION=${GITHUB_REF#refs/tags/v}
+          echo "Extracting changelog for version $VERSION"
+          
+          # Extract the changelog section for this version
+          CHANGELOG_SECTION=$(awk -v version="$VERSION" '
+            /^## \[/ {
+              if ($0 ~ "\\[" version "\\]") {
+                found = 1
+                print $0
+                next
+              } else if (found) {
+                exit
+              }
+            }
+            found && /^## \[/ && $0 !~ "\\[" version "\\]" {
+              exit
+            }
+            found {
+              print $0
+            }
+          ' CHANGELOG.md)
+          
+          # If no specific version found, use a default message
+          if [ -z "$CHANGELOG_SECTION" ]; then
+            CHANGELOG_SECTION="## [$VERSION] - $(date +%Y-%m-%d)
+
+See [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md) for detailed release notes."
+          fi
+          
+          # Save to output and file for multiline content
+          echo "changelog<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGELOG_SECTION" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
       - name: Create Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG: ${{ steps.tag.outputs.tag }}
         run: |
+          # Create release notes combining changelog with installation instructions
+          cat > release_notes.md << 'EOF'
+          ${{ steps.changelog.outputs.changelog }}
+          
+          ---
+          
+          ## 📥 Installation
+          1. Download `Headsup-${{ steps.tag.outputs.tag }}.zip` below
+          2. Extract to your `World of Warcraft/Interface/AddOns/` folder
+          3. Restart WoW or type `/reload`
+          4. Type `/headsup config` to configure!
+          
+          ## 🌟 What's Included
+          - `Headsup.lua` - Core addon functionality
+          - `Headsup.toc` - Addon metadata
+          - `HeadsupGUI.lua` - Configuration interface
+          
+          ## 🚀 Quick Commands
+          - `/headsup config` - Open configuration panel
+          - `/headsup test` - Test the addon
+          - `/headsup` - View all commands
+          
+          ---
+          
+          **Compatible with World of Warcraft: Wrath of the Lich King 3.3.5a**
+          EOF
+          
           gh release create "$TAG" \
             --title "Headsup $TAG" \
-            --notes "## 🎯 Headsup $TAG
-
-            ### 📥 Installation
-            1. Download \`Headsup-$TAG.zip\` below
-            2. Extract to your \`World of Warcraft/Interface/AddOns/\` folder
-            3. Restart WoW or type \`/reload\`
-            4. Type \`/headsup config\` to configure!
-
-            ### 🌟 What's Included
-            - \`Headsup.lua\` - Core addon functionality
-            - \`Headsup.toc\` - Addon metadata
-            - \`HeadsupGUI.lua\` - Configuration interface
-
-            ### 🚀 Quick Commands
-            - \`/headsup config\` - Open configuration panel
-            - \`/headsup test\` - Test the addon
-            - \`/headsup\` - View all commands
-
-            ---
-
-            **Compatible with World of Warcraft: Wrath of the Lich King 3.3.5a**" \
+            --notes-file release_notes.md \
               Headsup-$TAG.zip \
               Headsup.zip
