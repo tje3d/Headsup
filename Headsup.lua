@@ -122,6 +122,7 @@ TRACKED_SPELLS = {
     [71559] = true, -- Aim of the Iron Dwarves (Deathbringer's Will Heroic)
     [71486] = true, -- Power of the Taunka (Deathbringer's Will Normal)
     [71558] = true, -- Power of the Taunka (Deathbringer's Will Heroic)
+    
 }
 
 -- Default settings

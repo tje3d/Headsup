@@ -5,6 +5,26 @@ All notable changes to the Headsup addon will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2025-01-27
+
+### ✨ Added
+- **New Spell IDs**: Added support for additional important buffs and trinket effects
+  - Death's Choice Normal (67708) - Trinket proc from Trial of the Crusader
+  - Death's Choice Heroic/Paragon (67773) - Heroic version trinket proc
+  - Mark of the Fallen Champion (75456) - ICC trinket effect
+  - Soul Fragment (71905) - Shadowmourne legendary weapon proc
+  - Chaos Bane (73422) - Shadowmourne legendary weapon proc
+  - Strength of the Taunka (71561) - Deathbringer's Will Heroic proc
+  - Speed of the Vrykul (71560) - Deathbringer's Will Heroic proc
+  - Aim of the Iron Dwarves (71559) - Deathbringer's Will Heroic proc
+  - Power of the Taunka (71486) - Deathbringer's Will Normal proc
+  - Power of the Taunka (71558) - Deathbringer's Will Heroic proc
+
+### 🔧 Enhanced
+- **Trinket Coverage**: Comprehensive support for end-game trinket procs from ICC and ToC
+- **Legendary Support**: Full integration with Shadowmourne weapon effects
+- **Proc Tracking**: Better visibility of important weapon and trinket proc effects
+
 ## [1.2.0] - 2025-06-10
 
 ### ✨ Added

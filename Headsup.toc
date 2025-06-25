@@ -2,7 +2,7 @@
 ## Title: Headsup
 ## Notes: Displays important buffs with stack counts in the middle of the screen for better visibility
 ## Author: Moein Porkamel
-## Version: 1.1
+## Version: 1.3
 ## SavedVariables: HeadsupDB
 ## OptionalDeps: Ace3
 
