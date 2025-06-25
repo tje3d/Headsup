@@ -111,7 +111,17 @@ TRACKED_SPELLS = {
     [60515] = true, -- Healing Trance
     [33370] = true, -- Quagmirran's Eye (Spell Haste)
     [71396] = true, -- Rage of the Fallen
-    [72412] = true -- Frostforged Champion
+    [72412] = true, -- Frostforged Champion
+    [67708] = true, -- Death's Choice Normal
+    [67773] = true, -- Death's Choice Heroic (Paragon)
+    [75456] = true, -- Mark of the Fallen Champion
+    [71905] = true, -- Soul Fragment (Shadowmourne)
+    [73422] = true, -- Chaos Bane (Shadowmourne)
+    [71561] = true, -- Strength of the Taunka (Deathbringer's Will Heroic)
+    [71560] = true, -- Speed of the Vrykul (Deathbringer's Will Heroic)
+    [71559] = true, -- Aim of the Iron Dwarves (Deathbringer's Will Heroic)
+    [71486] = true, -- Power of the Taunka (Deathbringer's Will Normal)
+    [71558] = true, -- Power of the Taunka (Deathbringer's Will Heroic)
 }
 
 -- Default settings
